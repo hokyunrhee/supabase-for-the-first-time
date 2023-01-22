@@ -1,15 +1,18 @@
 import { InferGetStaticPropsType, GetStaticProps } from "next"
+import NextLink from "next/link"
 
-import { getLessons } from "@/apis/getLessons"
+import { supabase } from "@/utils/supabase"
+import { Database } from "@/types/database"
 
-type LessonsResponse = Awaited<ReturnType<typeof getLessons>>
-type Lessons = NonNullable<LessonsResponse["data"]>
+type Lesson = Database["public"]["Tables"]["lesson"]["Row"]
 
 const Home = ({ lessons }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div>
       {lessons.map(({ id, title }) => (
-        <div key={id}>{title}</div>
+        <NextLink key={id} href={`/${id}`}>
+          {title}
+        </NextLink>
       ))}
     </div>
   )
@@ -17,22 +20,12 @@ const Home = ({ lessons }: InferGetStaticPropsType<typeof getStaticProps>) => {
 
 export default Home
 
-export const getStaticProps: GetStaticProps<{ lessons: Lessons }> = async () => {
-  const { data: lessons, error } = await getLessons()
-
-  if (error) {
-    console.log(error)
-
-    return {
-      props: {
-        lessons: [],
-      },
-    }
-  }
+export const getStaticProps: GetStaticProps<{ lessons: Lesson[] }> = async () => {
+  const { data: lessons } = await supabase.from("lesson").select("*")
 
   return {
     props: {
-      lessons,
+      lessons: lessons as Lesson[],
     },
   }
 }

@@ -1,3 +1,9 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import NextLink from "next/link"
+
+import { supabase } from "@/utils/supabase"
+import { useRouter } from "next/router"
+
 interface AppLayoutProps {
   children: React.ReactNode
 }
@@ -15,33 +21,37 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 export default AppLayout
 
 const Navbar = () => {
+  const queryClient = useQueryClient()
+  const router = useRouter()
+  const { data, isLoading } = useQuery(["session"], async () => {
+    const { data, error } = await supabase.auth.getSession()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data.session
+  })
+
+  const logout = async () => {
+    await supabase.auth.signOut()
+    queryClient.invalidateQueries(["session"])
+    router.replace("/")
+  }
+
+  const renderButton = () => {
+    return data ? <button onClick={logout}>logout</button> : <NextLink href={"/login"}>login</NextLink>
+  }
+
   return (
     <div className="navbar bg-base-100 shadow-md">
       <div className="flex-1">
-        <a className="btn-ghost btn text-xl normal-case">daisyUI</a>
+        <NextLink href="/" className="btn-ghost btn text-xl normal-case">
+          SaaS
+        </NextLink>
       </div>
       <div className="flex-none gap-2">
-        <div className="dropdown-end dropdown">
-          <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-            <div className="w-10 rounded-full">
-              <img src="https://placeimg.com/80/80/people" />
-            </div>
-          </label>
-          <ul tabIndex={0} className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
-        </div>
+        {isLoading ? <div className="h-12 w-12 animate-pulse rounded-full bg-slate-200" /> : renderButton()}
       </div>
     </div>
   )

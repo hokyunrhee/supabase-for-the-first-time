@@ -43,6 +43,7 @@ const Login = () => {
             name="email"
             className="flex rounded-lg border-2 border-black px-3 py-2 font-medium placeholder:font-normal"
             ref={emailRef}
+            required
           />
           <button
             type="submit"

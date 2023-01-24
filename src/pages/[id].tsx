@@ -1,5 +1,7 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next"
 import { ParsedUrlQuery } from "querystring"
+import { useEffect, useState } from "react"
+import VideoComponent from "react-player"
 
 import { supabase } from "@/utils/supabase"
 import { Database } from "@/types/database"
@@ -10,7 +12,24 @@ interface Params extends ParsedUrlQuery {
 }
 
 const LessonId = ({ lesson }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <div>{lesson.title}</div>
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+
+  useEffect(() => {
+    const getPremiumContent = async () => {
+      const { data } = await supabase.from("premium_content").select("*").eq("id", lesson.id).single()
+
+      setVideoUrl(data ? data.video_url : null)
+    }
+
+    getPremiumContent()
+  }, [lesson.id])
+
+  return (
+    <div>
+      <div>{lesson.title}</div>
+      {!!videoUrl && <VideoComponent url={videoUrl} width="100%" />}
+    </div>
+  )
 }
 
 export default LessonId

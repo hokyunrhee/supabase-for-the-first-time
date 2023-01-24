@@ -48,6 +48,23 @@ export interface Database {
           title?: string | null
         }
       }
+      premium_content: {
+        Row: {
+          created_at: string | null
+          id: number
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          video_url?: string | null
+        }
+      }
       profile: {
         Row: {
           created_at: string | null

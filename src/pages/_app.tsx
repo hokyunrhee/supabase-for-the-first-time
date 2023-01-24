@@ -6,13 +6,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import { UserProvider } from "@/contexts/user"
 
-if (process.env.NODE_ENV === "development") {
-  if (typeof window !== "undefined") {
-    const { worker } = require("../mocks/browser")
-    worker.start()
-  }
-}
-
 const queryClient = new QueryClient()
 
 function MyApp({ Component, pageProps }: AppProps) {

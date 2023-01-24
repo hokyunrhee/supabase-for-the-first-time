@@ -3,9 +3,9 @@ import { useRef } from "react"
 import { supabase } from "@/utils/supabase"
 import { useMutation } from "@tanstack/react-query"
 
-const emailRedirectTo = process.env.NEXT_PUBLIC_APP_URL
+const NEXT_PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL
 
-if (!emailRedirectTo) throw new Error("Missing App URL")
+if (!NEXT_PUBLIC_APP_URL) throw new Error("Missing App URL")
 
 const Login = () => {
   const emailRef = useRef<HTMLInputElement>(null)
@@ -23,7 +23,7 @@ const Login = () => {
     await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo,
+        emailRedirectTo: NEXT_PUBLIC_APP_URL,
       },
     })
   })

@@ -1,37 +1,41 @@
-import { supabase } from "@/utils/supabase"
 import React, { createContext, useContext, useEffect, useState } from "react"
 
+import { Database } from "@/types/database"
+import { supabase } from "@/utils/supabase"
+
 type User = Awaited<ReturnType<typeof supabase.auth.getUser>>["data"]["user"]
-type State = { user: User; isLoading: boolean }
+type Profile = Database["public"]["Tables"]["profile"]["Row"] | null
+type State = { user: User; profile: Profile; isLoading: boolean }
 
 const context = createContext<State | null>(null)
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User>(null)
+  const [profile, setProfile] = useState<Profile>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getUser().then((res) => {
-      const { data } = res
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser()
       const { user } = data
+
+      if (user) {
+        const { data: profile } = await supabase.from("profile").select("*").eq("id", user.id).single()
+        setProfile(profile)
+      }
 
       setUser(user)
       setIsLoading(false)
-    })
-  }, [])
+    }
 
-  useEffect(() => {
+    getUser()
+
     supabase.auth.onAuthStateChange(() => {
-      supabase.auth.getUser().then((res) => {
-        const { data } = res
-        const { user } = data
-
-        setUser(user)
-      })
+      getUser()
     })
   }, [])
 
-  return <context.Provider value={{ user, isLoading }}>{children}</context.Provider>
+  return <context.Provider value={{ user, profile, isLoading }}>{children}</context.Provider>
 }
 
 export const useUser = () => {

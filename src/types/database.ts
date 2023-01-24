@@ -48,6 +48,32 @@ export interface Database {
           title?: string | null
         }
       }
+      profile: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          interval: string | null
+          is_subscribed: boolean | null
+          stripe_customer: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id: string
+          interval?: string | null
+          is_subscribed?: boolean | null
+          stripe_customer?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          interval?: string | null
+          is_subscribed?: boolean | null
+          stripe_customer?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never

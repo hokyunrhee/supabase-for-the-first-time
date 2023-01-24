@@ -18,12 +18,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser()
       const { user } = data
+      const { data: profile } = await supabase.from("profile").select("*").eq("id", user?.id).single()
 
-      if (user) {
-        const { data: profile } = await supabase.from("profile").select("*").eq("id", user.id).single()
-        setProfile(profile)
-      }
-
+      setProfile(profile)
       setUser(user)
       setIsLoading(false)
     }

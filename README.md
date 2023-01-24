@@ -8,6 +8,8 @@ Supabase를 사이드프로젝트 혹은 프로덕션에서 사용하기 전에 
 
 마침 stripe까지 붙여 볼 수 있는 [course](https://egghead.io/courses/build-a-saas-product-with-next-js-supabase-and-stripe-61f2bc20)가 있어서 전체적인 내용을 따라가지만, 일부 내용은 바꿔서 진행했습니다.
 
+> 위의 코스는 supabaase v1을 사용하기 때문에 듣지 않는 것을 권장합니다.
+
 ## 소감
 
 앞으로 메인 스택으로 가져갈 것 같습니다.

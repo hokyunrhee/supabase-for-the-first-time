@@ -30,18 +30,39 @@ const Navbar = () => {
   }
 
   const renderButton = () => {
-    return user ? <button onClick={logout}>logout</button> : <NextLink href={"/login"}>login</NextLink>
+    return user ? (
+      <button className="btn-ghost btn" onClick={logout}>
+        logout
+      </button>
+    ) : (
+      <NextLink href={"/login"} className="btn-ghost btn">
+        login
+      </NextLink>
+    )
   }
 
   return (
     <div className="navbar bg-base-100 shadow-md">
-      <div className="flex-1">
-        <NextLink href="/" className="btn-ghost btn text-xl normal-case">
-          SaaS
-        </NextLink>
-      </div>
-      <div className="flex-none gap-2">
-        {isLoading ? <div className="h-12 w-12 animate-pulse rounded-full bg-slate-200" /> : renderButton()}
+      <div className="flex flex-grow justify-between">
+        <div>
+          <NextLink href="/" className="btn-ghost btn text-xl normal-case">
+            SaaS
+          </NextLink>
+        </div>
+        <div>
+          <NextLink href="/pricing" className="btn-ghost btn">
+            Pricing
+          </NextLink>
+        </div>
+        <div className="flex-none gap-2">
+          {isLoading ? (
+            <div className="flex min-w-[64px] justify-center">
+              <div className="h-12 w-12 animate-pulse rounded-full bg-slate-200" />
+            </div>
+          ) : (
+            <div className="flex min-w-[64px] justify-center">{renderButton()}</div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -1,8 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 import NextLink from "next/link"
+import { useRouter } from "next/router"
 
 import { supabase } from "@/utils/supabase"
-import { useRouter } from "next/router"
+import { useUser } from "@/contexts/user"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -21,26 +21,16 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 export default AppLayout
 
 const Navbar = () => {
-  const queryClient = useQueryClient()
   const router = useRouter()
-  const { data, isLoading } = useQuery(["session"], async () => {
-    const { data, error } = await supabase.auth.getSession()
-
-    if (error) {
-      throw new Error(error.message)
-    }
-
-    return data.session
-  })
+  const { user, isLoading } = useUser()
 
   const logout = async () => {
     await supabase.auth.signOut()
-    queryClient.invalidateQueries(["session"])
     router.replace("/")
   }
 
   const renderButton = () => {
-    return data ? <button onClick={logout}>logout</button> : <NextLink href={"/login"}>login</NextLink>
+    return user ? <button onClick={logout}>logout</button> : <NextLink href={"/login"}>login</NextLink>
   }
 
   return (

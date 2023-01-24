@@ -4,6 +4,8 @@ import AppLayout from "@/components/app-layout"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
+import { UserProvider } from "@/contexts/user"
+
 if (process.env.NODE_ENV === "development") {
   if (typeof window !== "undefined") {
     const { worker } = require("../mocks/browser")
@@ -16,10 +18,12 @@ const queryClient = new QueryClient()
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppLayout>
-        <Component {...pageProps} />
-      </AppLayout>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <UserProvider>
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </UserProvider>
     </QueryClientProvider>
   )
 }

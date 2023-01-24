@@ -5,7 +5,6 @@ import axios from "axios"
 import { loadStripe } from "@stripe/stripe-js"
 
 import { useUser } from "@/contexts/user"
-import { supabase } from "@/utils/supabase"
 
 const NEXT_PUBLIC_STRIPE_KEY = process.env.NEXT_PUBLIC_STRIPE_KEY
 
